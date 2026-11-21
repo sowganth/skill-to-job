@@ -1,0 +1,29 @@
+# ===================================================================
+# Database Configuration Example: Production / Local MySQL Setup
+# Copy this to application-mysql.properties or configure via Environment Variables
+# ===================================================================
+
+# 1. Environment Variables (Recommended):
+# export SPRING_DATASOURCE_URL="jdbc:mysql://localhost:3306/student_skill_job_finder?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true"
+# export SPRING_DATASOURCE_USERNAME="root"
+# export SPRING_DATASOURCE_PASSWORD="your_secure_password"
+# export JWT_SECRET="your-256-bit-long-production-secret-key-at-least-32-characters"
+
+# 2. Or configure properties directly in application.properties:
+spring.datasource.url=jdbc:mysql://localhost:3306/student_skill_job_finder?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=your_secure_password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA / Hibernate DDL behavior:
+# Use 'update' in development, 'validate' in production:
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# Connection Pool Settings (HikariCP defaults optimized for web traffic)
+spring.datasource.hikari.maximum-pool-size=10
+spring.datasource.hikari.minimum-idle=5
+spring.datasource.hikari.idle-timeout=300000
+spring.datasource.hikari.connection-timeout=20000
+spring.datasource.hikari.max-lifetime=1200000

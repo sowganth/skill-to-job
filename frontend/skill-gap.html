@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Gap Analysis - Skill2Job</title>
+  <meta name="description" content="Quantify your skill gaps, identify high-priority learning objectives, and accelerate placement readiness.">
+  
+  <!-- Supabase Client -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+      }
+    }
+  </script>
+  <script type="module" src="/src/supabaseClient.js"></script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="dashboard-app">
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+  <!-- Left Sidebar Navigation -->
+  <!-- Left Sidebar Navigation (21st.dev Component 28489 Adapted) -->
+  <aside class="dashboard-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-row">
+        <a href="dashboard.html" class="logo-brand">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <span>Skill2Job</span>
+        </a>
+      </div>
+
+      <!-- 21st.dev Quick Search Input in Sidebar -->
+      <div class="sidebar-search-box">
+        <svg class="sidebar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          id="sidebar-search-input" 
+          class="sidebar-search-input" 
+          placeholder="Search navigation or matrix..." 
+          autocomplete="off"
+        >
+        <span class="sidebar-search-kbd">Ctrl+K</span>
+      </div>
+    </div>
+
+    <div class="sidebar-body">
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Overview</span>
+        <a href="dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="profile.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>My Profile</span>
+        </a>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Career Alignment</span>
+        <a href="skills.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <span>Skills Inventory</span>
+        </a>
+
+        <a href="jobs.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <span>Job Recommendations</span>
+        </a>
+
+        <a href="skill-gap.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Skill Gap Analysis</span>
+          <span class="sidebar-badge">Matrix</span>
+        </a>
+
+        <a href="learning-resources.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span>Learning Resources</span>
+        </a>
+      </div>
+
+      <!-- 21st.dev Career Widget -->
+      <div class="sidebar-promo-card">
+        <div class="sidebar-promo-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Curated Pathways</span>
+        </div>
+        <p class="sidebar-promo-desc">
+          Follow verified learning roadmaps for each identified missing skill.
+        </p>
+        <a href="learning-resources.html" class="sidebar-promo-btn">
+          <span>Find Study Resources →</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="student-mini-profile">
+        <div id="sidebar-student-avatar" class="student-mini-avatar">RS</div>
+        <div class="student-mini-meta">
+          <div id="sidebar-student-name" class="student-mini-name">Rahul Sharma</div>
+          <div id="sidebar-student-dept" class="student-mini-dept">Computer Science</div>
+        </div>
+        <button class="student-mini-logout js-logout-btn" title="Sign Out" aria-label="Sign Out">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <div class="dashboard-main">
+    
+    <header class="dashboard-topbar">
+      <div class="topbar-left">
+        <button id="sidebar-toggle" class="topbar-btn" style="display:none;" aria-label="Toggle Navigation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <span style="font-weight:700; color:var(--text-primary); font-size:1.05rem;">Skill Gap Analysis Engine</span>
+      </div>
+
+      <div class="topbar-right">
+        <div id="backend-status-pill" class="backend-status-pill">
+          <span class="status-dot dot-demo"></span>
+          <span>Checking API...</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Curriculum Skill Gap Breakdown</h1>
+          <p class="page-description">Evaluate your acquired competencies side-by-side with specific industry job specifications.</p>
+        </div>
+        
+        <!-- Job Role Selector Dropdown -->
+        <div style="min-width:280px;">
+          <label for="select-target-job" style="display:block; font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted); margin-bottom:0.35rem;">Select Target Role:</label>
+          <select id="select-target-job" class="form-control" style="font-weight:600; padding:0.5rem 0.85rem;">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="gap-loading" class="loading-container">
+        <div class="loading-spinner-lg"></div>
+        <p style="color:var(--text-muted); font-size:0.875rem;">Evaluating skill matrix alignment...</p>
+      </div>
+
+      <!-- Main Gap Analysis Content -->
+      <div id="gap-main-content" style="display:none;">
+        
+        <!-- Target Role Header Card -->
+        <div class="dash-card gap-analysis-header">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1.25rem; margin-bottom:1.25rem;">
+            <div>
+              <span class="badge badge-purple" style="margin-bottom:0.4rem;">Evaluated Role</span>
+              <h2 id="gap-job-title" style="font-size:1.75rem; margin-bottom:0.25rem;">Junior Java Developer</h2>
+              <div id="gap-job-meta" style="font-size:0.875rem; color:var(--text-muted);">
+                Nexus Infotech &bull; Backend &bull; Bangalore
+              </div>
+            </div>
+
+            <div style="text-align:right;">
+              <span id="gap-match-badge" class="match-badge match-high" style="font-size:1.1rem; padding:0.4rem 1.15rem;">
+                92% Alignment
+              </span>
+            </div>
+          </div>
+
+          <!-- Progress Bar & Summary -->
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:0.875rem; font-weight:600; margin-bottom:0.35rem;">
+              <span>Overall Competency Coverage</span>
+              <span id="gap-progress-text">92%</span>
+            </div>
+            <div class="match-bar-track" style="height:10px;">
+              <div id="gap-progress-bar" class="match-bar-fill" style="width:92%;"></div>
+            </div>
+            <div id="gap-readiness-summary" style="font-size:0.875rem; margin-top:0.75rem;"></div>
+          </div>
+        </div>
+
+        <!-- 2 Columns: Skills Possessed vs Missing Skills -->
+        <div class="gap-columns-grid">
+          
+          <!-- Column 1: Skills Already Possessed -->
+          <div class="gap-column-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; padding-bottom:0.85rem; border-bottom:1px solid var(--border-color);">
+              <div>
+                <h3 style="font-size:1.15rem; color:#15803d;">✓ Skills You Possess</h3>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Prerequisites matched by your profile</span>
+              </div>
+              <span id="possessed-count" class="badge badge-success" style="font-size:0.8125rem;">0</span>
+            </div>
+
+            <div id="possessed-skills-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Column 2: Missing Skills & Priority -->
+          <div class="gap-column-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; padding-bottom:0.85rem; border-bottom:1px solid var(--border-color);">
+              <div>
+                <h3 style="font-size:1.15rem; color:#b91c1c;">⚠️ Missing Skills (Skill Gap)</h3>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Skills required by employer but absent</span>
+              </div>
+              <span id="missing-count" class="badge badge-danger" style="font-size:0.8125rem;">0</span>
+            </div>
+
+            <div id="missing-skills-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Immediate Curated Learning Resources Section -->
+        <div class="dash-card" style="margin-bottom:2rem;">
+          <div class="dash-card-header">
+            <div>
+              <h3 class="dash-card-title">Curated Learning Recommendations for Missing Skills</h3>
+              <p style="font-size:0.8125rem; color:var(--text-muted);">Verified official documentation and free learning materials to bridge your missing competencies.</p>
+            </div>
+            <a href="learning-resources.html" class="btn btn-secondary btn-sm">Explore All Resources →</a>
+          </div>
+
+          <div id="gap-resources-container" class="resources-grid">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Ethical & Academic Disclaimer Notice (Strict Project Requirement) -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:var(--radius-md); padding:1rem 1.25rem; font-size:0.8125rem; color:var(--text-muted); display:flex; gap:0.75rem; align-items:flex-start;">
+          <span style="font-size:1.1rem; line-height:1;">⚖️</span>
+          <div>
+            <strong>Academic Advisory & Compliance Notice:</strong>
+            <p style="margin-top:0.25rem;">
+              The skill match score and gap analysis metrics provided by Skill2Job represent automated curriculum benchmarks calculated against candidate job descriptions. This analysis is an academic orientation tool and does not guarantee qualifying for, interviewing with, or obtaining employment from any organization.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/skill-gap.js"></script>
+</body>
+</html>

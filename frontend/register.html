@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration - Skill2Job</title>
+  <meta name="description" content="Register your student account to discover job matches, analyze skill gaps, and build career roadmaps.">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Supabase Import Map -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+      }
+    }
+  </script>
+
+  <!-- Core App Stylesheets for Toast & Alerts -->
+  <link rel="stylesheet" href="css/style.css?v=3.2">
+  <link rel="stylesheet" href="css/responsive.css?v=3.2">
+
+  <style>
+    /* Reset & Base Canvas */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100vh;
+      width: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%) !important;
+      background-attachment: fixed !important;
+      color: #ffffff;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    body.auth-page {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 100vh !important;
+      min-height: 100dvh !important;
+      padding: 2.5rem 1rem !important;
+      position: relative !important;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%) !important;
+      background-attachment: fixed !important;
+    }
+
+    /* Ambient Deep Indigo Gradient & Glow Layers */
+    .bg-gradient-layer {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Subtle SVG Noise Texture */
+    .bg-noise-layer {
+      position: fixed;
+      inset: 0;
+      opacity: 0.035;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Radial Glow Orbs */
+    .radial-glow-top {
+      position: fixed;
+      top: -15vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110vw;
+      max-width: 1100px;
+      height: 60vh;
+      border-radius: 0 0 50% 50%;
+      background: rgba(129, 140, 248, 0.15);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 2;
+      animation: pulseGlow 8s ease-in-out infinite alternate;
+    }
+
+    .radial-glow-bottom {
+      position: fixed;
+      bottom: -20vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90vw;
+      max-width: 900px;
+      height: 70vh;
+      border-radius: 50% 50% 0 0;
+      background: rgba(99, 102, 241, 0.18);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 2;
+      animation: pulseGlow 6s ease-in-out infinite alternate 1s;
+    }
+
+    .glow-spot-1 {
+      position: fixed;
+      top: 15%;
+      left: 10%;
+      width: 360px;
+      height: 360px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 2;
+      animation: floatSpot 10s ease-in-out infinite alternate;
+    }
+
+    .glow-spot-2 {
+      position: fixed;
+      bottom: 15%;
+      right: 10%;
+      width: 380px;
+      height: 380px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 2;
+      animation: floatSpot 12s ease-in-out infinite alternate 2s;
+    }
+
+    @keyframes pulseGlow {
+      0% { opacity: 0.5; transform: translateX(-50%) scale(0.96); }
+      100% { opacity: 0.9; transform: translateX(-50%) scale(1.04); }
+    }
+
+    @keyframes floatSpot {
+      0% { transform: translateY(0); opacity: 0.25; }
+      100% { transform: translateY(-25px); opacity: 0.45; }
+    }
+
+    /* 3D Perspective Card Wrapper */
+    .card-perspective-stage {
+      perspective: 1500px;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card-3d-tilter {
+      width: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+      will-change: transform;
+    }
+
+    /* Ambient Card Glow Behind */
+    .card-ambient-aura {
+      position: absolute;
+      inset: -2px;
+      border-radius: 1.25rem;
+      background: radial-gradient(circle at 50% 50%, rgba(192, 132, 252, 0.18), transparent 70%);
+      opacity: 0.4;
+      filter: blur(14px);
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .card-3d-tilter:hover .card-ambient-aura {
+      opacity: 0.85;
+    }
+
+    /* Traveling Light Beam Laser Frame */
+    .traveling-beam-container {
+      position: absolute;
+      inset: -1px;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .beam-top {
+      position: absolute;
+      top: 0;
+      left: -50%;
+      height: 3px;
+      width: 50%;
+      background: linear-gradient(90deg, transparent, #ffffff, transparent);
+      opacity: 0.75;
+      filter: blur(1px);
+      animation: beamTop 3s ease-in-out infinite;
+    }
+
+    .beam-right {
+      position: absolute;
+      top: -50%;
+      right: 0;
+      width: 3px;
+      height: 50%;
+      background: linear-gradient(180deg, transparent, #ffffff, transparent);
+      opacity: 0.75;
+      filter: blur(1px);
+      animation: beamRight 3s ease-in-out infinite 0.75s;
+    }
+
+    .beam-bottom {
+      position: absolute;
+      bottom: 0;
+      right: -50%;
+      height: 3px;
+      width: 50%;
+      background: linear-gradient(270deg, transparent, #ffffff, transparent);
+      opacity: 0.75;
+      filter: blur(1px);
+      animation: beamBottom 3s ease-in-out infinite 1.5s;
+    }
+
+    .beam-left {
+      position: absolute;
+      bottom: -50%;
+      left: 0;
+      width: 3px;
+      height: 50%;
+      background: linear-gradient(0deg, transparent, #ffffff, transparent);
+      opacity: 0.75;
+      filter: blur(1px);
+      animation: beamLeft 3s ease-in-out infinite 2.25s;
+    }
+
+    @keyframes beamTop {
+      0% { left: -50%; opacity: 0.3; }
+      50% { opacity: 0.9; filter: blur(2px); }
+      100% { left: 100%; opacity: 0.3; }
+    }
+
+    @keyframes beamRight {
+      0% { top: -50%; opacity: 0.3; }
+      50% { opacity: 0.9; filter: blur(2px); }
+      100% { top: 100%; opacity: 0.3; }
+    }
+
+    @keyframes beamBottom {
+      0% { right: -50%; opacity: 0.3; }
+      50% { opacity: 0.9; filter: blur(2px); }
+      100% { right: 100%; opacity: 0.3; }
+    }
+
+    @keyframes beamLeft {
+      0% { bottom: -50%; opacity: 0.3; }
+      50% { opacity: 0.9; filter: blur(2px); }
+      100% { bottom: 100%; opacity: 0.3; }
+    }
+
+    /* Glassmorphism Inner Card */
+    .sign-in-card {
+      position: relative;
+      background: rgba(10, 10, 16, 0.6) !important;
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 1.25rem;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      z-index: 3;
+    }
+
+    /* Subtle Card Inner Grid Texture */
+    .card-grid-texture {
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      background-image: 
+        linear-gradient(135deg, #ffffff 0.5px, transparent 0.5px),
+        linear-gradient(45deg, #ffffff 0.5px, transparent 0.5px);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+
+    /* Brand Header */
+    .brand-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand-avatar {
+      margin: 0 auto 0.85rem auto;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .brand-avatar:hover {
+      transform: scale(1.05);
+    }
+
+    .brand-avatar svg {
+      width: 22px;
+      height: 22px;
+      stroke: #ffffff;
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
+    }
+
+    .brand-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.75) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3rem;
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 400;
+    }
+
+    /* Demo Quick Access Pill */
+    .demo-pill-btn {
+      width: 100%;
+      padding: 0.55rem 0.85rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0.6rem;
+      border: 1px dashed rgba(168, 85, 247, 0.45);
+      background: rgba(168, 85, 247, 0.08);
+      color: #e9d5ff;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: all 0.25s ease;
+    }
+
+    .demo-pill-btn:hover {
+      background: rgba(168, 85, 247, 0.18);
+      border-color: rgba(168, 85, 247, 0.8);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Form Grid Layout */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      .sign-in-card {
+        padding: 1.75rem 1.25rem;
+      }
+    }
+
+    /* Input Field Groups */
+    .input-box {
+      margin-bottom: 0.65rem;
+      position: relative;
+    }
+
+    .input-label-mini {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.3rem;
+    }
+
+    .input-label-mini .req {
+      color: #f87171;
+    }
+
+    .input-outer-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      border-radius: 0.6rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    .input-outer-wrap:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .input-outer-wrap.focused {
+      border-color: rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.09);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+      transform: scale(1.005);
+    }
+
+    .input-outer-wrap.has-error {
+      border-color: #f87171 !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+    }
+
+    .input-icon-prefix {
+      position: absolute;
+      left: 0.85rem;
+      width: 16px;
+      height: 16px;
+      stroke: rgba(255, 255, 255, 0.4);
+      transition: stroke 0.2s ease;
+      pointer-events: none;
+    }
+
+    .input-outer-wrap.focused .input-icon-prefix {
+      stroke: #ffffff;
+    }
+
+    .sleek-input {
+      width: 100%;
+      height: 40px;
+      padding: 0 1rem 0 2.5rem;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-family: inherit;
+    }
+
+    .sleek-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Select Dropdown Styling */
+    select.sleek-input {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.85rem center;
+    }
+
+    select.sleek-input option {
+      background: #111118;
+      color: #ffffff;
+    }
+
+    /* Eye Password Toggle Button */
+    .pwd-eye-btn {
+      position: absolute;
+      right: 0.75rem;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.3rem;
+      transition: color 0.2s ease;
+      border-radius: 4px;
+    }
+
+    .pwd-eye-btn:hover {
+      color: #ffffff;
+    }
+
+    .pwd-eye-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+    }
+
+    .err-text {
+      display: block;
+      color: #f87171;
+      font-size: 0.7rem;
+      margin-top: 0.2rem;
+      padding-left: 0.2rem;
+      min-height: 0.95rem;
+    }
+
+    /* Primary Action Button */
+    .primary-submit-btn {
+      width: 100%;
+      height: 42px;
+      margin-top: 0.85rem;
+      border-radius: 0.6rem;
+      border: none;
+      background: #ffffff;
+      color: #000000;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+    }
+
+    .primary-submit-btn:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+    }
+
+    .primary-submit-btn:active {
+      transform: scale(0.985);
+    }
+
+    .primary-submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-arrow-icon {
+      width: 15px;
+      height: 15px;
+      stroke: #000000;
+      transition: transform 0.25s ease;
+    }
+
+    .primary-submit-btn:hover .btn-arrow-icon {
+      transform: translateX(3px);
+    }
+
+    /* Shiny Sheen Animation */
+    .btn-sheen {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: btnSheen 3s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes btnSheen {
+      0% { left: -100%; }
+      30%, 100% { left: 100%; }
+    }
+
+    /* Bottom Switch Link */
+    .auth-switch-text {
+      text-align: center;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 1.25rem;
+    }
+
+    .auth-switch-text a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.2s ease;
+    }
+
+    .auth-switch-text a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 1px;
+      background: #ffffff;
+      transition: width 0.3s ease;
+    }
+
+    .auth-switch-text a:hover::after {
+      width: 100%;
+    }
+
+    /* Spinner */
+    .custom-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      border-top-color: #000000;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <!-- Ambient OnlyPipe Purple Background Stack -->
+  <div class="bg-gradient-layer"></div>
+  <div class="bg-noise-layer"></div>
+  <div class="radial-glow-top"></div>
+  <div class="radial-glow-bottom"></div>
+  <div class="glow-spot-1"></div>
+  <div class="glow-spot-2"></div>
+
+  <!-- 3D Perspective Card Stage -->
+  <div class="card-perspective-stage" id="card-stage">
+    <div class="card-3d-tilter" id="card-tilter">
+      
+      <!-- Outer Glow Aura -->
+      <div class="card-ambient-aura"></div>
+
+      <!-- Traveling Light Beam Border Laser -->
+      <div class="traveling-beam-container">
+        <div class="beam-top"></div>
+        <div class="beam-right"></div>
+        <div class="beam-bottom"></div>
+        <div class="beam-left"></div>
+      </div>
+
+      <!-- Glassmorphism Card Container -->
+      <div class="sign-in-card">
+        <div class="card-grid-texture"></div>
+
+        <!-- Brand Icon & Header -->
+        <div class="brand-header">
+          <div class="brand-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <h1 class="brand-title">Create Student Account</h1>
+          <p class="brand-subtitle">Register your academic credentials to unlock customized job recommendations</p>
+        </div>
+
+        <!-- Quick Demo Student Access Pill -->
+        <button type="button" id="demo-fill-reg-btn" class="demo-pill-btn">
+          <span>⚡</span>
+          <span>Quick Fill: Sample Student (Priya Patel)</span>
+        </button>
+
+        <!-- Registration Form -->
+        <form id="register-form" novalidate>
+          
+          <div class="form-grid-2">
+            <!-- Full Name -->
+            <div class="input-box">
+              <label class="input-label-mini" for="fullName">Full Name <span class="req">*</span></label>
+              <div class="input-outer-wrap" id="wrap-fullName">
+                <svg class="input-icon-prefix" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <input 
+                  type="text" 
+                  id="fullName" 
+                  class="sleek-input" 
+                  placeholder="e.g. Priya Patel" 
+                  required 
+                  autocomplete="name"
+                >
+              </div>
+              <span class="err-text" id="err-fullName"></span>
+            </div>
+
+            <!-- Student ID -->
+            <div class="input-box">
+              <label class="input-label-mini" for="studentId">Student ID / Roll No <span class="req">*</span></label>
+              <div class="input-outer-wrap" id="wrap-studentId">
+                <svg class="input-icon-prefix" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="18" x="3" y="3" rx="2"/>
+                  <path d="M7 7h10M7 12h10M7 17h6"/>
+                </svg>
+                <input 
+                  type="text" 
+                  id="studentId" 
+                  class="sleek-input" 
+                  placeholder="e.g. STU2024CS112" 
+                  required
+                >
+              </div>
+              <span class="err-text" id="err-studentId"></span>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <!-- College Email -->
+            <div class="input-box">
+              <label class="input-label-mini" for="collegeEmail">College Email Address <span class="req">*</span></label>
+              <div class="input-outer-wrap" id="wrap-collegeEmail">
+                <svg class="input-icon-prefix" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="16" x="2" y="4" rx="2"/>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                <input 
+                  type="email" 
+                  id="collegeEmail" 
+                  class="sleek-input" 
+                  placeholder="priya@college.edu" 
+                  required 
+                  autocomplete="email"
+                >
+              </div>
+              <span class="err-text" id="err-collegeEmail"></span>
+            </div>
+
+            <!-- College Name -->
+            <div class="input-box">
+              <label class="input-label-mini" for="collegeName">College / University Name <span class="req">*</span></label>
+              <div class="input-outer-wrap" id="wrap-collegeName">
+                <svg class="input-icon-prefix" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <input 
+                  type="text" 
+                  id="collegeName" 
+                  class="sleek-input" 
+                  placeholder="e.g. National Institute of Tech" 
+                  required
+                >
+              </div>
+              <span class="err-text" id="err-collegeName"></span>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <!-- Department -->
+            <div class="input-box">
+              <label class="input-label-mini" for="department">Department / Branch <span class="req">*</span></label>
+              <div class="input-outer-wrap" id="wrap-department">
+                <svg class="input-icon-prefix" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                </svg>
+                <select id="department" class="sleek-input" required>
+                  <option value="" disabled selected>Select department</option>
+                  <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="AI & Data Science">AI & Data Science</option>
+                  <option value="Electronics & Communication">Electronics & Communication</option>
+                  <option value="Master of Computer Applications (MCA)">Master of Computer Applications (MCA)</option>
+                  <option value="Electrical & Electronics">Electrical & Electronics</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Other">Other Department</option>
+                </select>
+              </div>
+              <span class="err-text" id="err-department"></span>
+            </div>
+
+            <!-- Current Year of Study -->
+            <div class="input-box">
+              <label class="input-label-mini" for="yearOfStudy">Current Year of Study <span class="req">*</span></label>
+              <div class="input-outer-wrap" id="wrap-yearOfStudy">
+                <svg class="input-icon-prefix" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                  <line x1="16" x2="16" y1="2" y2="6"/>
+                  <line x1="8" x2="8" y1="2" y2="6"/>
+                  <line x1="3" x2="21" y1="10" y2="10"/>
+                </svg>
+                <select id="yearOfStudy" class="sleek-input" required>
+                  <option value="" disabled selected>Select current year</option>
+                  <option value="1st Year">1st Year (Freshman)</option>
+                  <option value="2nd Year">2nd Year (Sophomore)</option>
+                  <option value="3rd Year">3rd Year (Pre-Final)</option>
+                  <option value="4th Year">4th Year (Final Year)</option>
+                  <option value="Postgraduate / Alumni">Postgraduate / Alumni</option>
+                </select>
+              </div>
+              <span class="err-text" id="err-yearOfStudy"></span>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <!-- Password -->
+            <div class="input-box">
+              <label class="input-label-mini" for="password">Password <span class="req">*</span></label>
+              <div class="input-outer-wrap" id="wrap-password">
+                <svg class="input-icon-prefix" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input 
+                  type="password" 
+                  id="password" 
+                  class="sleek-input" 
+                  placeholder="Min 6 characters" 
+                  required 
+                  autocomplete="new-password"
+                >
+                <button type="button" class="pwd-eye-btn js-toggle-pwd" data-target="password" aria-label="Toggle password visibility">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+              <span class="err-text" id="err-password"></span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="input-box">
+              <label class="input-label-mini" for="confirmPassword">Confirm Password <span class="req">*</span></label>
+              <div class="input-outer-wrap" id="wrap-confirmPassword">
+                <svg class="input-icon-prefix" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m9 12 2 2 4-4"/>
+                  <rect width="18" height="18" x="3" y="3" rx="2"/>
+                </svg>
+                <input 
+                  type="password" 
+                  id="confirmPassword" 
+                  class="sleek-input" 
+                  placeholder="Re-enter password" 
+                  required 
+                  autocomplete="new-password"
+                >
+                <button type="button" class="pwd-eye-btn js-toggle-pwd" data-target="confirmPassword" aria-label="Toggle password visibility">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+              <span class="err-text" id="err-confirmPassword"></span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="submit-btn" class="primary-submit-btn">
+            <div class="btn-sheen"></div>
+            <span id="btn-text">Create Account</span>
+            <svg class="btn-arrow-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            <span id="btn-spinner" class="custom-spinner" style="display:none;"></span>
+          </button>
+
+          <!-- Switch to Sign In -->
+          <div class="auth-switch-text">
+            Already have a student account? <a href="login.html">Sign in here</a>
+          </div>
+
+          <!-- Supabase Error Message Under Form -->
+          <div id="supabase-error" class="supabase-error-msg" style="display:none; color: #f87171; font-size: 0.85rem; text-align: center; margin-top: 0.9rem; padding: 0.5rem 0.75rem; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.28); border-radius: 8px;"></div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js?v=3.2"></script>
+  <script src="js/auth.js?v=3.2"></script>
+  <script src="js/main.js?v=3.2"></script>
+
+  <script type="module">
+    import { supabase } from "./src/supabaseClient.js";
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 3D Tilt Card Interaction
+      const stage = document.getElementById('card-stage');
+      const tilter = document.getElementById('card-tilter');
+
+      if (stage && tilter) {
+        stage.addEventListener('mousemove', (e) => {
+          const rect = stage.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          const rotateX = -(y / (rect.height / 2)) * 6;
+          const rotateY = (x / (rect.width / 2)) * 6;
+          tilter.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+        });
+
+        stage.addEventListener('mouseleave', () => {
+          tilter.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        });
+      }
+
+      // Input Focus Styling
+      const fieldIds = ['fullName', 'studentId', 'collegeEmail', 'collegeName', 'department', 'yearOfStudy', 'password', 'confirmPassword'];
+      fieldIds.forEach(id => {
+        const input = document.getElementById(id);
+        const wrap = document.getElementById(`wrap-${id}`);
+        if (input && wrap) {
+          input.addEventListener('focus', () => wrap.classList.add('focused'));
+          input.addEventListener('blur', () => wrap.classList.remove('focused'));
+          const clearError = () => {
+            wrap.classList.remove('has-error');
+            const errEl = document.getElementById(`err-${id}`);
+            if (errEl) errEl.textContent = '';
+          };
+          input.addEventListener('input', clearError);
+          input.addEventListener('change', clearError);
+        }
+      });
+
+      // Toggle Password Visibility
+      document.querySelectorAll('.js-toggle-pwd').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const input = document.getElementById(targetId);
+          if (input) {
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            btn.innerHTML = isPassword ? `
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;stroke:currentColor;">
+                <path d="m15 18-.722-3.25"/>
+                <path d="M2 8a10.645 10.645 0 0 0 20 0"/>
+                <path d="m20 15-1.726-2.05"/>
+                <path d="m4 15 1.726-2.05"/>
+                <path d="m9 18 .722-3.25"/>
+              </svg>
+            ` : `
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;stroke:currentColor;">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            `;
+          }
+        });
+      });
+
+      // Quick Demo Fill
+      const demoBtn = document.getElementById('demo-fill-reg-btn');
+      if (demoBtn) {
+        demoBtn.addEventListener('click', () => {
+          document.getElementById('fullName').value = 'Priya Patel';
+          document.getElementById('studentId').value = 'STU2024CS112';
+          document.getElementById('collegeEmail').value = 'priya.patel@college.edu';
+          document.getElementById('collegeName').value = 'National Institute of Engineering & Technology';
+          document.getElementById('department').value = 'Computer Science & Engineering';
+          document.getElementById('yearOfStudy').value = '3rd Year';
+          document.getElementById('password').value = 'PriyaPass123!';
+          document.getElementById('confirmPassword').value = 'PriyaPass123!';
+
+          fieldIds.forEach(id => {
+            const wrap = document.getElementById(`wrap-${id}`);
+            const errEl = document.getElementById(`err-${id}`);
+            if (wrap) wrap.classList.remove('has-error');
+            if (errEl) errEl.textContent = '';
+          });
+          App.showToast('Sample student profile filled for Priya Patel', 'info', 2500);
+        });
+      }
+
+      // Registration Form Submission
+      const form = document.getElementById('register-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const btnText = document.getElementById('btn-text');
+      const btnSpinner = document.getElementById('btn-spinner');
+      const supabaseErrorEl = document.getElementById('supabase-error');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Clear existing error states
+        fieldIds.forEach(id => {
+          const wrap = document.getElementById(`wrap-${id}`);
+          const errEl = document.getElementById(`err-${id}`);
+          if (wrap) wrap.classList.remove('has-error');
+          if (errEl) errEl.textContent = '';
+        });
+        if (supabaseErrorEl) {
+          supabaseErrorEl.textContent = '';
+          supabaseErrorEl.style.display = 'none';
+        }
+
+        const fullName = document.getElementById('fullName').value.trim();
+        const studentId = document.getElementById('studentId').value.trim();
+        const collegeEmail = document.getElementById('collegeEmail').value.trim();
+        const collegeName = document.getElementById('collegeName').value.trim();
+        const department = document.getElementById('department').value;
+        const yearOfStudy = document.getElementById('yearOfStudy').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        let hasError = false;
+        function setError(id, msg) {
+          const wrap = document.getElementById(`wrap-${id}`);
+          const errEl = document.getElementById(`err-${id}`);
+          if (wrap) wrap.classList.add('has-error');
+          if (errEl) errEl.textContent = msg;
+          hasError = true;
+        }
+
+        if (!fullName) setError('fullName', 'Full name is required');
+        if (!studentId) setError('studentId', 'Student ID / Roll No is required');
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!collegeEmail) {
+          setError('collegeEmail', 'College email is required');
+        } else if (!emailRegex.test(collegeEmail)) {
+          setError('collegeEmail', 'Please enter a valid email address');
+        }
+
+        if (!collegeName) setError('collegeName', 'College name is required');
+        if (!department) setError('department', 'Please select your department');
+        if (!yearOfStudy) setError('yearOfStudy', 'Please select current year of study');
+
+        if (!password) {
+          setError('password', 'Password is required');
+        } else if (password.length < 6) {
+          setError('password', 'Password must be at least 6 characters');
+        }
+
+        if (!confirmPassword) {
+          setError('confirmPassword', 'Please confirm your password');
+        } else if (password !== confirmPassword) {
+          setError('confirmPassword', 'Passwords do not match');
+        }
+
+        if (hasError) return;
+
+        submitBtn.disabled = true;
+        btnText.textContent = 'Creating Account...';
+        btnSpinner.style.display = 'inline-block';
+
+        try {
+          // 1) For Sign Up: Use supabase.auth.signUp({ email, password })
+          const { data, error } = await supabase.auth.signUp({
+            email: collegeEmail,
+            password: password,
+            options: {
+              data: {
+                full_name: fullName,
+                student_id: studentId,
+                college: collegeName,
+                department: department,
+                year: yearOfStudy
+              }
+            }
+          });
+
+          if (error) {
+            if (supabaseErrorEl) {
+              supabaseErrorEl.textContent = error.message;
+              supabaseErrorEl.style.display = 'block';
+              supabaseErrorEl.style.color = '#f87171';
+              supabaseErrorEl.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+              supabaseErrorEl.style.background = 'rgba(239, 68, 68, 0.12)';
+            }
+            return;
+          }
+
+          // 1) After successful signup:
+          // - Do NOT auto-login.
+          // - Redirect the user to the Sign In page with email pre-filled.
+          App.showToast('Account created! Redirecting to sign in...', 'success', 2000);
+
+          setTimeout(() => {
+            window.location.href = `login.html?registered=true&email=${encodeURIComponent(collegeEmail)}`;
+          }, 600);
+
+        } catch (error) {
+          if (supabaseErrorEl) {
+            supabaseErrorEl.textContent = error.message || 'Registration failed. Please try again.';
+            supabaseErrorEl.style.display = 'block';
+          }
+        } finally {
+          submitBtn.disabled = false;
+          btnText.textContent = 'Create Account';
+          btnSpinner.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

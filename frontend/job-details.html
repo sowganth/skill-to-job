@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Details & Match Analysis - Skill2Job</title>
+  <meta name="description" content="Examine job requirements, prerequisites, student match percentage, and targeted learning recommendations.">
+  
+  <!-- Supabase Client -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+      }
+    }
+  </script>
+  <script type="module" src="/src/supabaseClient.js"></script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="dashboard-app">
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="dashboard-sidebar">
+    <div class="sidebar-header">
+      <a href="dashboard.html" class="logo-brand">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <span>Skill2Job</span>
+      </a>
+    </div>
+
+    <div class="sidebar-body">
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Overview</span>
+        <a href="dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="profile.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>My Profile</span>
+        </a>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Career Alignment</span>
+        <a href="skills.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <span>Skills Inventory</span>
+        </a>
+
+        <a href="jobs.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <span>Job Recommendations</span>
+        </a>
+
+        <a href="skill-gap.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Skill Gap Analysis</span>
+        </a>
+
+        <a href="learning-resources.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span>Learning Resources</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="student-mini-profile">
+        <div class="student-mini-avatar js-student-avatar">RS</div>
+        <div class="student-mini-meta">
+          <div class="student-mini-name js-student-name">Rahul Sharma</div>
+          <div class="student-mini-dept js-student-dept">Computer Science</div>
+        </div>
+        <button class="topbar-btn js-logout-btn" title="Sign Out" aria-label="Sign Out">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <div class="dashboard-main">
+    
+    <header class="dashboard-topbar">
+      <div class="topbar-left">
+        <button id="sidebar-toggle" class="topbar-btn" style="display:none;" aria-label="Toggle Navigation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <span style="font-weight:700; color:var(--text-primary); font-size:1.05rem;">Job Specification & Match</span>
+      </div>
+
+      <div class="topbar-right">
+        <a href="jobs.html" class="btn btn-secondary btn-sm">
+          ← Back to All Jobs
+        </a>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      
+      <!-- Loading State -->
+      <div id="job-details-loading" class="loading-container">
+        <div class="loading-spinner-lg"></div>
+        <p style="color:var(--text-muted); font-size:0.875rem;">Loading job specification & matching metrics...</p>
+      </div>
+
+      <!-- Main Job Details Container -->
+      <div id="job-details-container" style="display:none;">
+        
+        <!-- Job Header Banner -->
+        <div class="dash-card" style="margin-bottom:1.75rem;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1.25rem;">
+            <div>
+              <span id="job-category-badge" class="badge badge-primary" style="margin-bottom:0.5rem;">Backend</span>
+              <h1 id="job-title" style="font-size:1.85rem; margin-bottom:0.35rem;">Job Title</h1>
+              <div id="job-company-meta" style="font-size:0.95rem; color:var(--text-muted);">
+                Company &bull; Location
+              </div>
+            </div>
+
+            <!-- Match Score Box -->
+            <div style="text-align:right;">
+              <span id="job-match-badge" class="match-badge match-high" style="font-size:1.15rem; padding:0.45rem 1.15rem;">
+                92% Match
+              </span>
+              <div id="job-match-subtext" style="font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem;">
+                Based on your skills portfolio
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid var(--border-color); font-size:0.875rem; color:var(--text-secondary);">
+            <div>💼 <strong>Type:</strong> <span id="job-type">Full-Time</span></div>
+            <div>💰 <strong>Compensation:</strong> <span id="job-salary">Competitive</span></div>
+            <div>📍 <strong>Location:</strong> <span id="job-location">Bangalore / Hybrid</span></div>
+          </div>
+        </div>
+
+        <!-- 2 Column Layout: Details vs Skill Match -->
+        <div style="display:grid; grid-template-columns:1.6fr 1.4fr; gap:1.75rem;">
+          
+          <!-- Left Column: Description & Responsibilities -->
+          <div style="display:flex; flex-direction:column; gap:1.5rem;">
+            
+            <div class="dash-card">
+              <h3 class="dash-card-title" style="margin-bottom:0.75rem;">Role Overview</h3>
+              <p id="job-description" style="line-height:1.7; color:var(--text-secondary);"></p>
+            </div>
+
+            <div class="dash-card">
+              <h3 class="dash-card-title" style="margin-bottom:0.75rem;">Key Responsibilities</h3>
+              <ul id="job-responsibilities" style="padding-left:1.25rem; color:var(--text-secondary); line-height:1.7;"></ul>
+            </div>
+
+            <div class="dash-card">
+              <h3 class="dash-card-title" style="margin-bottom:0.75rem;">Preferred & Bonus Qualifications</h3>
+              <div id="job-preferred-skills" class="skill-tags-list"></div>
+            </div>
+
+          </div>
+
+          <!-- Right Column: Skills Alignment Panel -->
+          <div style="display:flex; flex-direction:column; gap:1.5rem;">
+            
+            <div class="card-bezel-outer">
+              <div class="card-bezel-inner">
+                <h3 style="font-size:1.2rem; margin-bottom:1rem;">Your Skill Alignment</h3>
+                
+                <div style="margin-bottom:1.5rem;">
+                  <div style="display:flex; justify-content:space-between; font-size:0.875rem; font-weight:600; margin-bottom:0.35rem;">
+                    <span>Overall Role Compatibility</span>
+                    <span id="gauge-match-text">92%</span>
+                  </div>
+                  <div class="match-bar-track" style="height:10px;">
+                    <div id="gauge-match-bar" class="match-bar-fill" style="width:92%;"></div>
+                  </div>
+                </div>
+
+                <!-- Matched Skills -->
+                <div style="margin-bottom:1.5rem;">
+                  <span style="display:block; font-size:0.75rem; text-transform:uppercase; font-weight:700; color:#15803d; margin-bottom:0.5rem;">
+                    ✓ Matched Skills You Possess (<span id="matched-count">0</span>)
+                  </span>
+                  <div id="matched-skills-chips" class="skill-tags-list"></div>
+                </div>
+
+                <!-- Missing Skills -->
+                <div style="margin-bottom:1.75rem;">
+                  <span style="display:block; font-size:0.75rem; text-transform:uppercase; font-weight:700; color:#b45309; margin-bottom:0.5rem;">
+                    ⚠️ Missing / Required Gaps (<span id="missing-count">0</span>)
+                  </span>
+                  <div id="missing-skills-chips" class="skill-tags-list"></div>
+                </div>
+
+                <!-- CTA to Skill Gap Page -->
+                <div style="border-top:1px solid var(--border-color); padding-top:1.25rem;">
+                  <a id="btn-analyze-gap" href="skill-gap.html" class="btn btn-primary" style="width:100%;">
+                    <span>Perform Deep Gap Analysis & Roadmaps →</span>
+                  </a>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Recommended Learning Actions -->
+            <div class="dash-card">
+              <h3 class="dash-card-title" style="margin-bottom:0.75rem;">Recommended Learning Actions</h3>
+              <p style="font-size:0.8125rem; color:var(--text-muted); margin-bottom:1rem;">Prioritized steps to qualify for this exact vacancy:</p>
+              <div id="learning-actions-list" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!Auth.requireAuth()) return;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const jobId = parseInt(urlParams.get('id') || '1', 10);
+
+      const loading = document.getElementById('job-details-loading');
+      const container = document.getElementById('job-details-container');
+
+      try {
+        // Fetch student skills
+        let studentSkills = [];
+        try {
+          const res = await apiFetch('/skills');
+          studentSkills = (res && res.skills && res.skills.length > 0) ? res.skills : App.getStudentSkills();
+        } catch(e) {
+          studentSkills = App.getStudentSkills();
+        }
+        if (!studentSkills || studentSkills.length === 0) {
+          studentSkills = App.getStudentSkills();
+        }
+
+        // Fetch job details
+        let job = null;
+        try {
+          const jobRes = await apiFetch(`/jobs/${jobId}`);
+          job = jobRes.job;
+        } catch(e) {
+          job = MOCK_JOBS_DATABASE.find(j => j.id === jobId) || MOCK_JOBS_DATABASE[0];
+        }
+
+        if (!job) {
+          App.showToast('Job posting not found.', 'error');
+          return;
+        }
+
+        // Calculate match
+        const match = App.calculateSkillMatch(job.requiredSkills, studentSkills);
+
+        // Populate fields
+        document.getElementById('job-title').textContent = job.title;
+        document.getElementById('job-category-badge').textContent = job.category;
+        document.getElementById('job-company-meta').textContent = `${job.company} • ${job.location}`;
+        document.getElementById('job-type').textContent = job.type || 'Full-Time';
+        document.getElementById('job-salary').textContent = job.salaryRange || 'Competitive (Campus Scale)';
+        document.getElementById('job-location').textContent = job.location || 'Hybrid';
+        document.getElementById('job-description').textContent = job.description;
+
+        // Responsibilities
+        const respContainer = document.getElementById('job-responsibilities');
+        if (job.responsibilities && job.responsibilities.length) {
+          respContainer.innerHTML = job.responsibilities.map(r => `<li>${escapeHtml(r)}</li>`).join('');
+        } else {
+          respContainer.innerHTML = `<li>Develop core features and collaborate across engineering teams</li>`;
+        }
+
+        // Preferred skills
+        const prefContainer = document.getElementById('job-preferred-skills');
+        if (job.preferredSkills && job.preferredSkills.length) {
+          prefContainer.innerHTML = job.preferredSkills.map(ps => `<span class="skill-tag">${escapeHtml(ps)}</span>`).join('');
+        } else {
+          prefContainer.innerHTML = `<span style="font-size:0.8125rem; color:var(--text-muted);">Standard CS fundamentals</span>`;
+        }
+
+        // Match Badges & Bar
+        const badgeEl = document.getElementById('job-match-badge');
+        badgeEl.textContent = `${match.matchPercentage}% Match`;
+        let matchClass = 'match-high';
+        if (match.matchPercentage < 50) matchClass = 'match-low';
+        else if (match.matchPercentage < 80) matchClass = 'match-mid';
+        badgeEl.className = `match-badge ${matchClass}`;
+
+        document.getElementById('gauge-match-text').textContent = `${match.matchPercentage}%`;
+        document.getElementById('gauge-match-bar').style.width = `${match.matchPercentage}%`;
+
+        // Matched chips
+        document.getElementById('matched-count').textContent = match.matchedSkills.length;
+        const matchedContainer = document.getElementById('matched-skills-chips');
+        if (match.matchedSkills.length > 0) {
+          matchedContainer.innerHTML = match.matchedSkills.map(s => `
+            <span class="skill-tag skill-tag-matched">✓ ${escapeHtml(s)}</span>
+          `).join('');
+        } else {
+          matchedContainer.innerHTML = `<span style="font-size:0.8125rem; color:var(--text-muted);">No prerequisites matched yet.</span>`;
+        }
+
+        // Missing chips
+        document.getElementById('missing-count').textContent = match.missingSkills.length;
+        const missingContainer = document.getElementById('missing-skills-chips');
+        if (match.missingSkills.length > 0) {
+          missingContainer.innerHTML = match.missingSkills.map(s => `
+            <span class="skill-tag skill-tag-missing">✗ ${escapeHtml(s)}</span>
+          `).join('');
+        } else {
+          missingContainer.innerHTML = `<span style="font-size:0.8125rem; color:#15803d;">🎉 All requirements matched!</span>`;
+        }
+
+        // Gap Button link
+        document.getElementById('btn-analyze-gap').href = `skill-gap.html?jobId=${job.id}`;
+
+        // Recommended learning actions
+        const actionsContainer = document.getElementById('learning-actions-list');
+        if (match.missingSkills.length > 0) {
+          actionsContainer.innerHTML = match.missingSkills.map((sk, idx) => `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.8rem; background:var(--bg-subtle); border-radius:var(--radius-md); font-size:0.8125rem;">
+              <span><strong>Step ${idx + 1}:</strong> Master ${escapeHtml(sk)}</span>
+              <a href="learning-resources.html?skill=${encodeURIComponent(sk)}" class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding:0.25rem 0.5rem;">
+                Resources →
+              </a>
+            </div>
+          `).join('');
+        } else {
+          actionsContainer.innerHTML = `
+            <div style="font-size:0.8125rem; color:#15803d; background:#dcfce7; padding:0.75rem; border-radius:var(--radius-md);">
+              You possess 100% of the baseline required skills. We recommend reviewing behavioral interview questions.
+            </div>
+          `;
+        }
+
+      } catch (err) {
+        console.error('Failed to load job details:', err);
+      } finally {
+        if (loading) loading.style.display = 'none';
+        if (container) container.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

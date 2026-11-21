@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill2Job - Turn Your Skills Into Career Opportunities</title>
+  <meta name="description" content="AI-driven Student Skill-to-Job Finder System. Discover job roles matching your college skillset, analyze skill gaps, and access curated learning paths.">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css?v=3.2">
+  <link rel="stylesheet" href="css/responsive.css?v=3.2">
+
+  <style>
+    /* Ensure mobile navigation drawer is strictly hidden on desktop */
+    @media (min-width: 769px) {
+      .mobile-nav {
+        display: none !important;
+      }
+      .mobile-menu-btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Main Navigation">
+        <a href="index.html" class="logo-brand">
+          <div class="logo-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <span>Skill2Job</span>
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-link">Home</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+          <li><a href="#categories" class="nav-link">Job Domains</a></li>
+          <li><a href="#benefits" class="nav-link">Student Benefits</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <a href="login.html" class="btn btn-secondary">Student Login</a>
+          <a href="register.html" class="btn btn-primary">
+            <span>Register Now</span>
+            <span class="btn-trailing-icon">→</span>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-nav" class="mobile-nav">
+      <ul class="mobile-nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#categories">Job Domains</a></li>
+        <li><a href="#benefits">Student Benefits</a></li>
+      </ul>
+      <div class="mobile-nav-actions">
+        <a href="login.html" class="btn btn-secondary" style="width:100%;">Student Login</a>
+        <a href="register.html" class="btn btn-primary" style="width:100%;">Register Free</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main id="home">
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          
+          <!-- Hero Left Column -->
+          <div class="hero-content">
+            <div class="eyebrow-pill">
+              <span>⚡</span>
+              <span>Intelligent Career Pathway Engine</span>
+            </div>
+
+            <h1 class="hero-title">
+              Turn Your Skills Into <br>
+              <span class="gradient-text">Career Opportunities</span>
+            </h1>
+
+            <p class="hero-subtitle">
+              Bridging the gap between college curricula and real industry expectations. Discover verified job roles that match your current skillset, pinpoint missing competencies, and follow targeted learning roadmaps.
+            </p>
+
+            <div class="hero-cta-group">
+              <a href="register.html" class="btn btn-primary btn-lg pulse-glow">
+                <span>Find My Career</span>
+                <span class="btn-trailing-icon">→</span>
+              </a>
+              <a href="jobs.html" class="btn btn-secondary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span>Explore Jobs</span>
+              </a>
+            </div>
+
+            <!-- 21st.dev Interactive Hero Search Explore Bar -->
+            <form action="jobs.html" method="GET" class="hero-search-bar" role="search">
+              <svg class="hero-search-bar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input 
+                type="text" 
+                name="keyword" 
+                placeholder="Try 'Java', 'Python', 'Cloud', 'Full Stack'..." 
+                aria-label="Search job roles by skill"
+              >
+              <button type="submit" class="btn btn-primary btn-sm">
+                <span>Search</span>
+              </button>
+            </form>
+
+            <div class="hero-stats">
+              <div class="hero-stat-item">
+                <h4>92%</h4>
+                <p>Match Accuracy</p>
+              </div>
+              <div class="hero-stat-item">
+                <h4>15+</h4>
+                <p>Curated Tech Roles</p>
+              </div>
+              <div class="hero-stat-item">
+                <h4>100%</h4>
+                <p>Free for Students</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Right Column: Interactive Card Preview -->
+          <div class="hero-visual">
+            <div class="hero-preview-outer">
+              <div class="hero-preview-inner">
+                <div class="preview-header">
+                  <div class="preview-student-chip">
+                    <div class="avatar-initials">RS</div>
+                    <div>
+                      <strong style="display:block; font-size:0.95rem;">Rahul Sharma</strong>
+                      <span style="font-size:0.75rem; color:var(--text-muted);">B.Tech CSE &bull; 3rd Year</span>
+                    </div>
+                  </div>
+                  <span class="badge badge-success">Live Analysis</span>
+                </div>
+
+                <!-- Match Snapshot -->
+                <div class="preview-match-card">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:0.8125rem; font-weight:700; color:var(--text-primary);">Junior Java Developer</span>
+                    <span class="match-badge match-high">92% Match</span>
+                  </div>
+                  <div class="match-bar-track">
+                    <div class="match-bar-fill" style="width: 92%;"></div>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+                    <span>Matched: Java, Spring Boot, SQL</span>
+                    <span>1 Skill Gap</span>
+                  </div>
+                </div>
+
+                <!-- Verified Skills Chips -->
+                <div style="margin-top:1.25rem;">
+                  <span style="display:block; font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-light); margin-bottom:0.6rem;">Acquired Student Skills</span>
+                  <div class="skill-tags-list">
+                    <span class="skill-tag skill-tag-matched">Java &bull; Advanced</span>
+                    <span class="skill-tag skill-tag-matched">Spring Boot &bull; Intermediate</span>
+                    <span class="skill-tag skill-tag-matched">SQL &bull; Intermediate</span>
+                    <span class="skill-tag skill-tag-matched">Git &bull; Intermediate</span>
+                  </div>
+                </div>
+
+                <!-- Suggested Bridge Step -->
+                <div style="margin-top:1.25rem; background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--radius-md); padding:0.85rem; font-size:0.8125rem; color:#1e40af; display:flex; align-items:center; gap:0.65rem;">
+                  <span style="font-size:1.1rem;">💡</span>
+                  <div>
+                    <strong>Recommended Next Skill: Docker</strong>
+                    <div style="font-size:0.75rem; color:#3b82f6;">Completing Docker increases match score to 100%</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow-pill">Core Features</div>
+          <h2>Engineered for College Student Success</h2>
+          <p>Skill2Job eliminates the uncertainty in campus recruitment by providing quantitative skills-matching and tailored growth roadmaps.</p>
+        </div>
+
+        <div class="features-grid">
+          
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m4.93 4.93 4.24 4.24"></path>
+                <path d="m14.83 9.17 4.24-4.24"></path>
+                <path d="m14.83 14.83 4.24 4.24"></path>
+                <path d="m9.17 14.83-4.24 4.24"></path>
+              </svg>
+            </div>
+            <h3>Intelligent Skill Matching</h3>
+            <p>Our weighted matching engine compares your technical and soft skills against contemporary industry job specifications to calculate your role alignment.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
+            <h3>Detailed Skill Gap Analysis</h3>
+            <p>Never guess what recruiters are looking for. Instantly see which essential skills you already possess and which specific gaps you need to bridge.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <h3>Curated Learning Pathways</h3>
+            <p>Direct access to verified official documentation, tutorials, and zero-cost courses from Oracle, Spring.io, MDN, and GitHub to master missing skills.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+            <h3>Campus & Entry-Level Focus</h3>
+            <p>Designed specifically for engineering and MCA students aiming for campus recruitment, summer internships, and graduate development roles.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <h3>Student Privacy & Security</h3>
+            <p>Your college records and authentication credentials are strictly protected. Plaintext passwords are never saved in client browser storage.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </div>
+            <h3>Spring Boot & MySQL Architecture</h3>
+            <p>Robust enterprise backend powered by Java Spring Boot REST controllers, JPA repository layers, and transactional MySQL data integrity.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow-pill">Simple Workflow</div>
+          <h2>How Skill2Job Works</h2>
+          <p>Follow four straightforward steps to transition from academic learning to placement-ready competence.</p>
+        </div>
+
+        <div class="steps-grid">
+          
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Build Your Profile</h3>
+            <p>Sign up with your college email and configure your current branch, year of study, and career ambitions.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Log Your Skills</h3>
+            <p>Add technical languages, frameworks, databases, and soft skills with self-assessed proficiency levels.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Review Matches</h3>
+            <p>Explore recommended vacancies filtered by match percentage and inspect missing prerequisites.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <h3>Close the Gap</h3>
+            <p>Study verified learning references, update your proficiency, and watch your role alignment score rise.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Job Categories Section -->
+    <section id="categories" class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow-pill">Career Domains</div>
+          <h2>Popular Job Categories</h2>
+          <p>Explore high-demand hiring categories for undergraduate and postgraduate computer science students.</p>
+        </div>
+
+        <div class="categories-grid">
+          
+          <a href="jobs.html?cat=Backend" class="category-card">
+            <div class="cat-icon">⚙️</div>
+            <h4>Backend Engineering</h4>
+            <span>Java, Spring Boot, SQL, APIs</span>
+          </a>
+
+          <a href="jobs.html?cat=Frontend" class="category-card">
+            <div class="cat-icon">🎨</div>
+            <h4>Frontend Development</h4>
+            <span>HTML5, CSS3, JavaScript, UI/UX</span>
+          </a>
+
+          <a href="jobs.html?cat=Full+Stack" class="category-card">
+            <div class="cat-icon">🚀</div>
+            <h4>Full-Stack Web</h4>
+            <span>Java Full-Stack, REST, Databases</span>
+          </a>
+
+          <a href="jobs.html?cat=Data+Science" class="category-card">
+            <div class="cat-icon">📊</div>
+            <h4>Data & Analytics</h4>
+            <span>Python, SQL, Algorithms, Pandas</span>
+          </a>
+
+          <a href="jobs.html?cat=DevOps" class="category-card">
+            <div class="cat-icon">☁️</div>
+            <h4>Cloud & DevOps</h4>
+            <span>Linux, Git, Docker, CI/CD</span>
+          </a>
+
+          <a href="jobs.html?cat=Systems" class="category-card">
+            <div class="cat-icon">⚡</div>
+            <h4>Systems & Embedded</h4>
+            <span>C, C++, Data Structures, OS</span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits for Students Section -->
+    <section id="benefits" class="section">
+      <div class="container">
+        <div class="benefits-split">
+          
+          <div>
+            <div class="eyebrow-pill">Strategic Advantage</div>
+            <h2>Why Students Rely On Skill2Job</h2>
+            <p style="margin-bottom:2rem;">Campus placements are competitive. Skill2Job provides students with quantitative, actionable clarity instead of vague career guidance.</p>
+
+            <ul class="benefit-list">
+              <li class="benefit-item">
+                <div class="benefit-check">✓</div>
+                <div>
+                  <strong>Zero Guesswork in Skill Selection</strong>
+                  <p>Understand which programming languages and toolsets are truly mandatory for specific job profiles.</p>
+                </div>
+              </li>
+              <li class="benefit-item">
+                <div class="benefit-check">✓</div>
+                <div>
+                  <strong>Personalized Learning Milestones</strong>
+                  <p>Prioritized action plans indicate which single skill addition delivers the greatest match increase.</p>
+                </div>
+              </li>
+              <li class="benefit-item">
+                <div class="benefit-check">✓</div>
+                <div>
+                  <strong>College Mini Project Ready</strong>
+                  <p>Fully compliant with academic standards, complete with decoupled REST architecture and MySQL schema support.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Visual Demonstration Card -->
+          <div>
+            <div class="card-bezel-outer">
+              <div class="card-bezel-inner">
+                <h3 style="margin-bottom:1rem; font-size:1.25rem;">Student Readiness Scorecard</h3>
+                
+                <div style="margin-bottom:1.25rem;">
+                  <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:0.35rem;">
+                    <span>Software Engineer Alignment</span>
+                    <strong style="color:var(--primary);">88%</strong>
+                  </div>
+                  <div class="match-bar-track"><div class="match-bar-fill" style="width:88%;"></div></div>
+                </div>
+
+                <div style="margin-bottom:1.25rem;">
+                  <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:0.35rem;">
+                    <span>Database Systems Proficiency</span>
+                    <strong style="color:var(--primary);">75%</strong>
+                  </div>
+                  <div class="match-bar-track"><div class="match-bar-fill" style="width:75%;"></div></div>
+                </div>
+
+                <div style="margin-bottom:1.25rem;">
+                  <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:0.35rem;">
+                    <span>Version Control & DevOps Literacy</span>
+                    <strong style="color:var(--primary);">90%</strong>
+                  </div>
+                  <div class="match-bar-track"><div class="match-bar-fill" style="width:90%;"></div></div>
+                </div>
+
+                <div style="padding:1rem; background:var(--bg-main); border-radius:var(--radius-md); font-size:0.8125rem; color:var(--text-secondary);">
+                  💡 <em>"Adding Docker and Unit Testing will elevate your score across 4 candidate backend roles."</em>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <div class="footer-brand">
+          <a href="index.html" class="logo-brand">
+            <div class="logo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <span>Skill2Job</span>
+          </a>
+          <p>Student Skill-to-Job Finder System. Designed as a college Java mini project with Spring Boot & MySQL integration.</p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="jobs.html">Job Listings</a></li>
+            <li><a href="register.html">Student Register</a></li>
+            <li><a href="login.html">Student Login</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Student Tools</h5>
+          <ul class="footer-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="skills.html">Skills Management</a></li>
+            <li><a href="skill-gap.html">Skill Gap Analysis</a></li>
+            <li><a href="learning-resources.html">Learning Resources</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Architecture</h5>
+          <ul class="footer-links">
+            <li><span style="color:var(--text-muted); font-size:0.875rem;">Backend: Java Spring Boot</span></li>
+            <li><span style="color:var(--text-muted); font-size:0.875rem;">Database: MySQL 8.x</span></li>
+            <li><span style="color:var(--text-muted); font-size:0.875rem;">Frontend: Vanilla HTML5 / CSS3 / JS</span></li>
+            <li><span style="color:var(--text-muted); font-size:0.875rem;">API Base: http://localhost:8080/api</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Skill2Job - College Mini Project. All rights reserved.</p>
+        <p>Academic Project Demonstration &bull; Strictly for Educational Usage</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js?v=3.2"></script>
+  <script src="js/auth.js?v=3.2"></script>
+  <script src="js/main.js?v=3.2"></script>
+</body>
+</html>

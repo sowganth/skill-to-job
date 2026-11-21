@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile - Skill2Job</title>
+  <meta name="description" content="View and update your student academic profile, department, and career interests.">
+  
+  <!-- Supabase Client -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+      }
+    }
+  </script>
+  <script type="module" src="/src/supabaseClient.js"></script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="dashboard-app">
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+  <!-- Left Sidebar Navigation -->
+  <!-- Left Sidebar Navigation (21st.dev Component 28489 Adapted) -->
+  <aside class="dashboard-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-row">
+        <a href="dashboard.html" class="logo-brand">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <span>Skill2Job</span>
+        </a>
+      </div>
+
+      <!-- 21st.dev Quick Search Input in Sidebar -->
+      <div class="sidebar-search-box">
+        <svg class="sidebar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          id="sidebar-search-input" 
+          class="sidebar-search-input" 
+          placeholder="Search navigation or settings..." 
+          autocomplete="off"
+        >
+        <span class="sidebar-search-kbd">Ctrl+K</span>
+      </div>
+    </div>
+
+    <div class="sidebar-body">
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Overview</span>
+        <a href="dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="profile.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>My Profile</span>
+          <span class="sidebar-badge">Student</span>
+        </a>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Career Alignment</span>
+        <a href="skills.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <span>Skills Inventory</span>
+        </a>
+
+        <a href="jobs.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <span>Job Recommendations</span>
+        </a>
+
+        <a href="skill-gap.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Skill Gap Analysis</span>
+        </a>
+
+        <a href="learning-resources.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span>Learning Resources</span>
+        </a>
+      </div>
+
+      <!-- 21st.dev Career Widget -->
+      <div class="sidebar-promo-card">
+        <div class="sidebar-promo-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Verified Student Profile</span>
+        </div>
+        <p class="sidebar-promo-desc">
+          Keep your college email and graduation year current to receive tailored campus drives.
+        </p>
+        <a href="#profile-form" class="sidebar-promo-btn">
+          <span>Update Credentials ↓</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="student-mini-profile">
+        <div id="sidebar-student-avatar" class="student-mini-avatar">RS</div>
+        <div class="student-mini-meta">
+          <div id="sidebar-student-name" class="student-mini-name">Rahul Sharma</div>
+          <div id="sidebar-student-dept" class="student-mini-dept">Computer Science</div>
+        </div>
+        <button class="student-mini-logout js-logout-btn" title="Sign Out" aria-label="Sign Out">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <div class="dashboard-main">
+    
+    <header class="dashboard-topbar">
+      <div class="topbar-left">
+        <button id="sidebar-toggle" class="topbar-btn" style="display:none;" aria-label="Toggle Navigation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <span style="font-weight:700; color:var(--text-primary); font-size:1.05rem;">Student Profile Management</span>
+      </div>
+
+      <div class="topbar-right">
+        <div id="backend-status-pill" class="backend-status-pill">
+          <span class="status-dot dot-demo"></span>
+          <span>Checking API...</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Academic Profile</h1>
+          <p class="page-description">Manage your college details, academic credentials, and target engineering interests.</p>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="profile-loading" class="loading-container">
+        <div class="loading-spinner-lg"></div>
+        <p style="color:var(--text-muted); font-size:0.875rem;">Loading student profile...</p>
+      </div>
+
+      <!-- Profile Card Container -->
+      <div id="profile-form-container" style="display:none;">
+        <div class="card-bezel-outer">
+          <div class="card-bezel-inner">
+            
+            <!-- Profile Banner / Header Header -->
+            <div style="display:flex; align-items:center; gap:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border-color); margin-bottom:2rem;">
+              <div id="profile-big-avatar" class="avatar-initials" style="width:4.25rem; height:4.25rem; font-size:1.5rem;">
+                RS
+              </div>
+              <div>
+                <h2 id="profile-heading-name" style="font-size:1.45rem; margin-bottom:0.25rem;">Rahul Sharma</h2>
+                <div id="profile-heading-email" style="font-size:0.875rem; color:var(--text-muted);">rahul.sharma@college.edu</div>
+                <div style="margin-top:0.4rem;">
+                  <span class="badge badge-primary">Undergraduate Student</span>
+                  <span class="badge badge-success">Active Placement Candidate</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Edit Form -->
+            <form id="profile-form" novalidate>
+              
+              <h3 style="font-size:1.15rem; margin-bottom:1.25rem; color:var(--text-primary);">Academic Details</h3>
+
+              <!-- Name & Student ID -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name" class="form-label">Full Name <span class="required">*</span></label>
+                  <input type="text" id="name" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="studentId" class="form-label">Student ID / Roll No <span class="required">*</span></label>
+                  <input type="text" id="studentId" class="form-control" required>
+                </div>
+              </div>
+
+              <!-- College & Email -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="college" class="form-label">College / University Name <span class="required">*</span></label>
+                  <input type="text" id="college" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="email" class="form-label">Official College Email <span class="required">*</span></label>
+                  <input type="email" id="email" class="form-control" required>
+                </div>
+              </div>
+
+              <!-- Department & Year -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="department" class="form-label">Department / Branch <span class="required">*</span></label>
+                  <select id="department" class="form-control" required>
+                    <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="AI & Data Science">AI & Data Science</option>
+                    <option value="Electronics & Communication">Electronics & Communication</option>
+                    <option value="Master of Computer Applications (MCA)">Master of Computer Applications (MCA)</option>
+                    <option value="Electrical & Electronics">Electrical & Electronics</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="year" class="form-label">Current Year of Study <span class="required">*</span></label>
+                  <select id="year" class="form-control" required>
+                    <option value="1st Year">1st Year (Freshman)</option>
+                    <option value="2nd Year">2nd Year (Sophomore)</option>
+                    <option value="3rd Year">3rd Year (Pre-Final)</option>
+                    <option value="4th Year">4th Year (Final Year)</option>
+                    <option value="Postgraduate / Alumni">Postgraduate / Alumni</option>
+                  </select>
+                </div>
+              </div>
+
+              <h3 style="font-size:1.15rem; margin:1.75rem 0 1.25rem; color:var(--text-primary);">Career Orientation & Biography</h3>
+
+              <!-- Career Interests -->
+              <div class="form-group">
+                <label for="careerInterests" class="form-label">Career Interests / Desired Roles</label>
+                <input type="text" id="careerInterests" class="form-control" placeholder="e.g. Java Backend, Cloud Architecture, Full-Stack Development">
+                <span class="form-hint">Separate role interests with commas to optimize matchmaking algorithms.</span>
+              </div>
+
+              <!-- Short Biography -->
+              <div class="form-group">
+                <label for="bio" class="form-label">Short Biography</label>
+                <textarea id="bio" class="form-control" rows="4" placeholder="Briefly describe your academic background, major projects, and career aspirations..."></textarea>
+              </div>
+
+              <!-- Action Buttons -->
+              <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border-color);">
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='dashboard.html'">Cancel</button>
+                <button type="submit" id="save-profile-btn" class="btn btn-primary">
+                  <span id="save-btn-text">Save Profile Changes</span>
+                  <span id="save-btn-spinner" class="spinner" style="display:none;"></span>
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

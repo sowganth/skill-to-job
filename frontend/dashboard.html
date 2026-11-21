@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - Skill2Job</title>
+  <meta name="description" content="Skill2Job Student Dashboard. View your skill metrics, job recommendations, and gap analytics.">
+  
+  <!-- Supabase Client -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+      }
+    }
+  </script>
+  <script type="module" src="/src/supabaseClient.js"></script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="dashboard-app">
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+  <!-- Left Sidebar Navigation (21st.dev Wensity Collapsible Sidebar) -->
+  <aside class="dashboard-sidebar" id="dashboard-sidebar" data-variant="collapsible" data-collapsed="false">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-row">
+        <a href="dashboard.html" class="logo-brand">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <span class="sidebar-brand-name">Skill2Job</span>
+        </a>
+
+        <!-- 21st.dev Sidebar Toggle Control -->
+        <button type="button" id="sidebar-collapse-toggle" class="sidebar-toggle-btn" aria-label="Toggle Sidebar" title="Collapse sidebar (Ctrl+B)">
+          <svg class="toggle-icon-collapse" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <rect width="18" height="18" x="3" y="3" rx="2"/>
+            <path d="M9 3v18"/>
+            <path d="m14 9-3 3 3 3"/>
+          </svg>
+          <svg class="toggle-icon-expand" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="display:none;">
+            <rect width="18" height="18" x="3" y="3" rx="2"/>
+            <path d="M9 3v18"/>
+            <path d="m13 15 3-3-3-3"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Quick Search Input in Sidebar -->
+      <div class="sidebar-search-box">
+        <svg class="sidebar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          id="sidebar-search-input" 
+          class="sidebar-search-input" 
+          placeholder="Search navigation or jobs..." 
+          autocomplete="off"
+        >
+        <span class="sidebar-search-kbd">Ctrl+K</span>
+      </div>
+    </div>
+
+    <div class="sidebar-body sidebar-nav">
+      
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Overview</span>
+        <a href="dashboard.html" class="sidebar-link active" title="Dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span class="link-label">Dashboard</span>
+          <span class="sidebar-badge">Live</span>
+        </a>
+
+        <a href="profile.html" class="sidebar-link" title="My Profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="link-label">My Profile</span>
+        </a>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Career Alignment</span>
+        
+        <a href="skills.html" class="sidebar-link" title="Skills Inventory">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <span class="link-label">Skills Inventory</span>
+          <span class="sidebar-badge">Catalog</span>
+        </a>
+
+        <a href="jobs.html" class="sidebar-link" title="Job Recommendations">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <span class="link-label">Job Recommendations</span>
+          <span class="sidebar-badge">Matches</span>
+        </a>
+
+        <a href="skill-gap.html" class="sidebar-link" title="Skill Gap Analysis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span class="link-label">Skill Gap Analysis</span>
+        </a>
+
+        <a href="learning-resources.html" class="sidebar-link" title="Learning Resources">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span class="link-label">Learning Resources</span>
+        </a>
+      </div>
+
+      <!-- Pro / Career Readiness Promo Card -->
+      <div class="sidebar-promo-card">
+        <div class="sidebar-promo-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Campus Placements</span>
+        </div>
+        <p class="sidebar-promo-desc">
+          Bridge high-priority skills to reach a 100% role match for campus drives.
+        </p>
+        <a href="skill-gap.html" class="sidebar-promo-btn">
+          <span>Analyze Gap Matrix →</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Sidebar Bottom User Profile Footer -->
+    <div class="sidebar-footer">
+      <div class="student-mini-profile" title="View / Update Student Profile">
+        <div id="sidebar-student-avatar" class="student-mini-avatar">RS</div>
+        <div class="student-mini-meta">
+          <div id="sidebar-student-name" class="student-mini-name">Rahul Sharma</div>
+          <div id="sidebar-student-dept" class="student-mini-dept">Computer Science</div>
+        </div>
+        <button class="student-mini-logout js-logout-btn" title="Sign Out" aria-label="Sign Out">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content View -->
+  <div class="dashboard-main">
+    
+    <!-- Topbar -->
+    <header class="dashboard-topbar">
+      <div class="topbar-left">
+        <button id="sidebar-toggle" class="topbar-btn" style="display:none;" aria-label="Toggle Navigation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <span style="font-weight:700; color:var(--text-primary); font-size:1.05rem;">Student Career Portal</span>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Live vs Mock Backend Status Pill -->
+        <div id="backend-status-pill" class="backend-status-pill">
+          <span class="status-dot dot-demo"></span>
+          <span>Checking API...</span>
+        </div>
+
+        <a href="index.html" class="btn btn-secondary btn-sm" title="Visit Public Landing Page">
+          Public Site ↗
+        </a>
+      </div>
+    </header>
+
+    <!-- Page Body -->
+    <main class="dashboard-content">
+      
+      <!-- Welcome Hero Banner -->
+      <section class="welcome-banner">
+        <div class="welcome-content">
+          <h2>Welcome back, <span id="dash-welcome-name">Student</span>! 👋</h2>
+          <p>
+            Your current skills have been benchmarked against live entry-level IT positions. Discover matching opportunities and bridge remaining requirements today.
+          </p>
+          <div class="welcome-actions">
+            <a href="skills.html" class="btn btn-primary btn-sm">
+              <span>+ Add New Skill</span>
+            </a>
+            <a href="jobs.html" class="btn btn-secondary btn-sm">
+              <span>Explore Recommended Jobs</span>
+            </a>
+            <a href="skill-gap.html" class="btn btn-secondary btn-sm">
+              <span>Run Gap Analysis</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Loading State -->
+      <div id="dash-loading" class="loading-container">
+        <div class="loading-spinner-lg"></div>
+        <p style="color:var(--text-muted); font-size:0.875rem;">Evaluating student skill alignment...</p>
+      </div>
+
+      <!-- Main Dashboard Grid Content -->
+      <div id="dash-main-grid" style="display:none;">
+        
+        <!-- Metrics Row -->
+        <div class="metrics-grid">
+          
+          <!-- Metric 1: Profile Completion (21st.dev Component 7793 Pattern) -->
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <div class="metric-icon-box metric-icon-blue">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <span class="metric-trend-pill trend-up">Active</span>
+            </div>
+            <div class="metric-meta">
+              <h4 id="metric-profile-score">85%</h4>
+              <p>Profile Completeness</p>
+              <div class="metric-progress-wrap">
+                <div class="metric-progress-track">
+                  <div id="metric-profile-bar" class="metric-progress-fill" style="width: 85%;"></div>
+                </div>
+                <div class="metric-progress-footer">
+                  <span>Current Status</span>
+                  <span>Target: 100%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metric 2: Total Skills Count -->
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <div class="metric-icon-box metric-icon-purple">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="16 18 22 12 16 6"></polyline>
+                  <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+              </div>
+              <span class="metric-trend-pill trend-target">Skills</span>
+            </div>
+            <div class="metric-meta">
+              <h4 id="metric-total-skills">0</h4>
+              <p>Verified Skills Logged</p>
+              <div class="metric-progress-wrap">
+                <div class="metric-progress-track">
+                  <div class="metric-progress-fill" style="width: 70%;"></div>
+                </div>
+                <div class="metric-progress-footer">
+                  <span>Portfolio Strength</span>
+                  <span>Competitive</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metric 3: Matching Jobs -->
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <div class="metric-icon-box metric-icon-green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </div>
+              <span class="metric-trend-pill trend-up">≥60% Match</span>
+            </div>
+            <div class="metric-meta">
+              <h4 id="metric-matching-jobs">0</h4>
+              <p>Placement Ready Roles</p>
+              <div class="metric-progress-wrap">
+                <div class="metric-progress-track">
+                  <div class="metric-progress-fill" style="width: 65%;"></div>
+                </div>
+                <div class="metric-progress-footer">
+                  <span>Campus Opportunities</span>
+                  <span>High Alignment</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metric 4: Top Job Match -->
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <div class="metric-icon-box metric-icon-amber">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </div>
+              <span class="metric-trend-pill trend-up">Top Role</span>
+            </div>
+            <div class="metric-meta">
+              <h4 id="metric-top-match">92%</h4>
+              <p id="metric-top-role" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Junior Java Developer</p>
+              <div class="metric-progress-wrap">
+                <div class="metric-progress-track">
+                  <div class="metric-progress-fill" style="width: 92%;"></div>
+                </div>
+                <div class="metric-progress-footer">
+                  <span>Peak Alignment</span>
+                  <span>Interview Ready</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Two Column Main Body -->
+        <div style="display:grid; grid-template-columns:1.8fr 1.2fr; gap:1.75rem;">
+          
+          <!-- Left Column: Recommended Jobs List -->
+          <div>
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <div>
+                  <h3 class="dash-card-title">Top Recommended Job Matches</h3>
+                  <p style="font-size:0.8125rem; color:var(--text-muted);">Roles scored based on your current technical & soft skill portfolio.</p>
+                </div>
+                <a href="jobs.html" class="btn btn-secondary btn-sm">View All Jobs →</a>
+              </div>
+
+              <!-- List rendered dynamically by dashboard.js -->
+              <div id="recommended-jobs-list" style="display:flex; flex-direction:column; gap:1.25rem;"></div>
+            </div>
+          </div>
+
+          <!-- Right Column: Skills Snapshot & Recommendations -->
+          <div style="display:flex; flex-direction:column; gap:1.75rem;">
+            
+            <!-- Quick Actions Card -->
+            <div class="dash-card">
+              <h3 class="dash-card-title" style="margin-bottom:0.85rem;">Quick Actions</h3>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
+                <a href="skills.html" class="btn btn-secondary btn-sm" style="justify-content:flex-start;">
+                  <span>⚙️ Manage Skills</span>
+                </a>
+                <a href="profile.html" class="btn btn-secondary btn-sm" style="justify-content:flex-start;">
+                  <span>👤 Update Profile</span>
+                </a>
+                <a href="skill-gap.html" class="btn btn-secondary btn-sm" style="justify-content:flex-start;">
+                  <span>📊 Run Gap Analysis</span>
+                </a>
+                <a href="learning-resources.html" class="btn btn-secondary btn-sm" style="justify-content:flex-start;">
+                  <span>📚 Study Resources</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Recommended Skills to Learn Next -->
+            <div class="dash-card">
+              <div class="dash-card-header" style="margin-bottom:0.75rem;">
+                <h3 class="dash-card-title">High-Impact Skills to Learn</h3>
+                <span class="badge badge-purple">Bridge Gaps</span>
+              </div>
+              <p style="font-size:0.8125rem; color:var(--text-muted); margin-bottom:1rem;">Acquiring these competencies will unlock the highest match improvements across your target roles.</p>
+              <div id="recommended-skills-list"></div>
+            </div>
+
+            <!-- Recent Skills Added -->
+            <div class="dash-card">
+              <div class="dash-card-header" style="margin-bottom:0.75rem;">
+                <h3 class="dash-card-title">Recent Skills in Portfolio</h3>
+                <a href="skills.html" style="font-size:0.75rem; font-weight:700;">Manage →</a>
+              </div>
+              <div id="recent-skills-list"></div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
