@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/register", "destination": "/register.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/jobs", "destination": "/jobs.html" },
+    { "source": "/job-details", "destination": "/job-details.html" },
+    { "source": "/profile", "destination": "/profile.html" },
+    { "source": "/skills", "destination": "/skills.html" },
+    { "source": "/skill-gap", "destination": "/skill-gap.html" },
+    { "source": "/learning-resources", "destination": "/learning-resources.html" }
+  ]
+}
